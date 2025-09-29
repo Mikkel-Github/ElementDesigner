@@ -27,7 +27,7 @@ const ColorComp: React.FC<{ color: Color, onClick: () => void }> = ({ color, onC
                         {/* Color codes */}
                         <p>{color.codes.hex}</p>
                         <p>({color.codes.rgb.r}, {color.codes.rgb.g}, {color.codes.rgb.b}, {color.codes.rgb.a})</p>
-                        <p>({color.codes.hsl.h}, {color.codes.hsl.s}, {color.codes.hsl.l}, {color.codes.hsl.a})</p>
+                        <p>({color.codes.hsv.h}, {color.codes.hsv.s}, {color.codes.hsv.v}, {color.codes.hsv.a})</p>
                     </div>
                 )}
             </div>

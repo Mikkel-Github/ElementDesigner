@@ -4,13 +4,13 @@ import { useState } from "react";
 import { type Color } from '../lib/color';
 
 
-const ColorComp: React.FC<{ color: Color, onClick: () => void, highlight: boolean }> = ({ color, onClick, highlight }) => {
+const ColorComp: React.FC<{ color: Color, onClick: () => void | null, highlight: boolean | null }> = ({ color, onClick, highlight }) => {
     const [expand, setExpand] = useState<boolean>(false);
 
     return (
         <button
             onClick={() => {
-                onClick();
+                if (onClick != null) onClick();
                 setExpand(!expand);
             }}
             onMouseEnter={() => { }}

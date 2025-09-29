@@ -7,6 +7,7 @@ import ColorTool from "@/components/color-tool";
 import { Toaster } from "@/components/ui/sonner"
 import { Color } from "@/lib/color";
 import { Copyright } from "lucide-react";
+import MaterialTool from "@/components/material-tool";
 
 export default function Home() {
     const [selectedColor, setSelectedColor] = useState<Color | null>(null);
@@ -21,6 +22,7 @@ export default function Home() {
                 <div className="flex flex-row gap-4 max-h-full overflow-hidden">
                     <Viewport selectedColor={selectedColor} />
                     <ColorTool selectedColor={selectedColor} onColorSelect={setSelectedColor} />
+                    <MaterialTool selectedColor={selectedColor} onColorSelect={setSelectedColor} />
                 </div>
             </main>
             <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

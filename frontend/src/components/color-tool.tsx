@@ -35,6 +35,7 @@ function ColorTool({
             toast("Got official colors!")
             const data = await response.json();
             setColors(data);
+            if (!selectedColor) onColorSelect(data[0])
         } catch (error) {
             toast("Failed to get colors")
         }
@@ -85,11 +86,8 @@ function ColorTool({
     }
 
     function setColor(color: { b: number; h: number; s: number }) {
-        console.log(color)
         const rgb = hsvToRgb(color.h, color.s, color.b);
         const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
-        console.log(rgb)
-        console.log(hex)
 
         const temp_color: Color = {
             id: -1,

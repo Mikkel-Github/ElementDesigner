@@ -32,10 +32,8 @@ function Viewport({ selectedColor }: { selectedColor: Color | null }) {
                     mesh.material.forEach((mat) => {
                         if ((mat as THREE.MeshStandardMaterial).color) {
                             (mat as THREE.MeshStandardMaterial).color = mat_color.clone();
-                            mat.opacity = 0.5;
-                            // TODO: Make it a material tool instead
-                            mat.opacity = color.codes.rgb.a;
-                            mat.transparent = color.codes.rgb.a < 1.0;
+                            mat.opacity = color.codes.hsv.a;
+                            mat.transparent = color.codes.hsv.a < 1.0;
                         }
                         mat.needsUpdate = true; // Required to apply the changes
                     });
@@ -43,9 +41,8 @@ function Viewport({ selectedColor }: { selectedColor: Color | null }) {
                     const mat = mesh.material as THREE.MeshStandardMaterial;
                     if (mat && mat.color) {
                         mat.color = mat_color.clone();
-                        // TODO: Make it a material tool instead
-                        mat.opacity = color.codes.rgb.a;
-                        mat.transparent = color.codes.rgb.a < 1.0;
+                        mat.opacity = color.codes.hsv.a;
+                        mat.transparent = color.codes.hsv.a < 1.0;
                     }
                     mesh.material.needsUpdate = true; // Required to apply the changes
                 }

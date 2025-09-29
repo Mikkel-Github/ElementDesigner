@@ -11,10 +11,10 @@ class RGB:
 
 
 @dataclass
-class HSL:
+class HSV:
     h: float
     s: float
-    l: float
+    v: float
     a: float = 1.0
 
 
@@ -22,7 +22,7 @@ class HSL:
 class ColorCodes:
     hex: str
     rgb: RGB
-    hsl: HSL
+    hsv: HSV
 
 
 @dataclass
@@ -45,66 +45,67 @@ def hex_to_rgb(hex_color):
     return r, g, b
 
 
-def rgb_to_hsl(r, g, b):
+def rgb_to_hsv(r, g, b):
     r, g, b = r / 255.0, g / 255.0, b / 255.0
-    h, l, s = colorsys.rgb_to_hls(r, g, b)
-    return h * 360, s * 100, l * 100
+    h, s, v = colorsys.rgb_to_hsv(r, g, b)
+    return h * 360, s * 100, v * 100
 
 
-def hsl_to_rgb(h, s, l):
-    r, g, b = colorsys.hls_to_rgb(h / 360.0, l / 100.0, s / 100.0)
+def hsv_to_rgb(h, s, v):
+    r, g, b = colorsys.hsv_to_rgb(h / 360.0, s / 100.0, v / 100.0)
     return int(r * 255), int(g * 255), int(b * 255)
 
 
-def hsl_to_hex(h, s, l):
-    r, g, b = hsl_to_rgb(h, s, l)
-    return rgb_to_hex(r, g, b)
-
-
-def hex_to_hsl(hex_color):
-    r, g, b = hex_to_rgb(hex_color)
-    return rgb_to_hsl(r, g, b)
-
-
-def create_color_object(hex_color=None, rgb_color=None, hsl_color=None) -> Color:
+def create_color_object(hex_color=None, rgb_color=None, hsv_color=None) -> Color:
     if hex_color:
         r, g, b = hex_to_rgb(hex_color)
-        h, s, l = rgb_to_hsl(r, g, b)
+        h, s, v = rgb_to_hsv(r, g, b)
     elif rgb_color:
         r, g, b = rgb_color
-        h, s, l = rgb_to_hsl(r, g, b)
+        h, s, v = rgb_to_hsv(r, g, b)
         hex_color = rgb_to_hex(r, g, b)
-    elif hsl_color:
-        h, s, l = hsl_color
-        r, g, b = hsl_to_rgb(h, s, l)
+    elif hsv_color:
+        h, s, v = hsv_color
+        r, g, b = hsv_to_rgb(h, s, v)
         hex_color = rgb_to_hex(r, g, b)
     else:
-        raise ValueError("Must provide hex_color, rgb_color, or hsl_color")
+        raise ValueError("Must provide hex_color, rgb_color, or hsv_color")
 
     return Color(
-        id=-1,  # color is not from database/json so it does not have an official id
-        codes=ColorCodes(hex=hex_color, rgb=RGB(r=r, g=g, b=b), hsl=HSL(h=h, s=s, l=l)),
+        id=-1,
+        codes=ColorCodes(
+            hex=hex_color,
+            rgb=RGB(r=r, g=g, b=b),
+            hsv=HSV(h=h, s=s, v=v),
+        ),
     )
 
 
 # Color tools
-def hsl_distance(c1: HSL, c2: HSL) -> float:
-    dh = min(abs(c1.h - c2.h), 360 - abs(c1.h - c2.h)) / 180.0  # hue is circular
+def hsv_distance(c1: HSV, c2: HSV) -> float:
+    dh = min(abs(c1.h - c2.h), 360 - abs(c1.h - c2.h)) / 180.0
     ds = abs(c1.s - c2.s) / 100.0
-    dl = abs(c1.l - c2.l) / 100.0
-    return (dh**2 + ds**2 + dl**2) ** 0.5
+    dv = abs(c1.v - c2.v) / 100.0
+    return (dh**2 + ds**2 + dv**2) ** 0.5
 
 
 def get_related_colors(
-    target: Color, colors: list[Color], num_related: int = 5
+    target: Color, colors: list[Color], threshold: float = 0.3, min_results: int = 5
 ) -> list[Color]:
     def similarity(c: Color) -> float:
-        return hsl_distance(target.codes.hsl, c.codes.hsl)
+        return hsv_distance(target.codes.hsv, c.codes.hsv)
 
     # ignore the provided color
     filtered = [c for c in colors if c.id != target.id]
 
-    # sort by HSL similarity
+    # sort by distance
     sorted_colors = sorted(filtered, key=similarity)
 
-    return sorted_colors[:num_related]
+    # filter the colors by the threshold
+    relevant_colors = [c for c in filtered if similarity(c) <= threshold]
+
+    if len(relevant_colors) >= min_results:
+        return relevant_colors
+    else:
+        # if not enough similar colors, fill in with closest others
+        return sorted_colors[:min_results]

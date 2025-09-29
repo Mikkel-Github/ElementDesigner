@@ -8,10 +8,10 @@ export interface Color {
             b: number;
             a: number;
         }
-        hsl: {
+        hsv: {
             h: number;
             s: number;
-            l: number;
+            v: number;
             a: number;
         }
     }

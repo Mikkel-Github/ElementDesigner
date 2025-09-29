@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { type Color } from '../lib/color';
-import colorjson from '../../public/colors.json';
+// import colorjson from '../../public/colors.json';
 import ColorComp from '../components/color';
 import { ColorPicker } from 'primereact/colorpicker';
 
@@ -16,23 +16,24 @@ function ColorTool({ onColorSelect }: { onColorSelect: (color: Color) => void })
     const fetchColors = async () => {
         try {
             // TODO: When the color service is implemented
-            // const response = await fetch("http://localhost:3000/api/v1/colors", {
-            //     method: "GET",
-            //     headers: { "Content-Type": "application/json" },
-            // });
+            const response = await fetch("http://localhost:80/colors", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            });
 
-            const response = {
-                ok: true,
-                body: colorjson
-            }
+            // const response = {
+            //     ok: true,
+            //     body: response.body
+            // }
 
             if (!response.ok) {
                 toast("Failed to get colors")
                 return
             }
             toast("Got official colors!")
-            setColors(response.body);
-            setSelectedColor(response.body[0]);
+            const data = await response.json();
+            setColors(data);
+            setSelectedColor(data[0]);
         } catch (error) {
             toast("Failed to get colors")
         }

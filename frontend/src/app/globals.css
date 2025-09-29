@@ -1,12 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@tailwind utilities;
 
 @custom-variant dark (&:is(.dark *));
 
+h1 {
+    font-weight: 800;
+    font-size: clamp(2rem, 1.55vw + 1rem, 25rem);
+}
+
 h4 {
-    font-weight: 400;
+    font-weight: 500;
     color: #141414;
-    font-size: clamp(1.28125rem, .3673469388vw + 1.1951530612rem, 1.5625rem);
+    font-size: clamp(1.4rem, .35vw + 1rem, 3rem);
+}
+
+@layer utilities {
+    .text-outline-white {
+        text-shadow:
+            2px 0 #fff,
+            -2px 0 #fff,
+            0 2px #fff,
+            0 -2px #fff,
+            1px 1px #fff,
+            -1px -1px #fff,
+            1px -1px #fff,
+            -1px 1px #fff;
+    }
 }
 
 @theme inline {

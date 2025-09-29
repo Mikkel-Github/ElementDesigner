@@ -209,16 +209,21 @@ function Viewport({ selectedColor }: { selectedColor: Color | null }) {
 
     }, []);
     return (
-        <div>
-            <div>
-                <Button variant="outline" onClick={() => { setShowAxisGuide(!showAxisGuide) }}>
+        <div className="flex flex-col items-center relative">
+            <div className="absolute top-0 left-0 p-2 flex flex-row gap-2">
+                <Button variant="outline" className="cursor-pointer" onClick={() => { setShowAxisGuide(!showAxisGuide) }}>
                     <Move3D />
                 </Button>
-                <Button variant="outline" onClick={() => { setShowGridGuide(!showGridGuide) }}>
+                <Button variant="outline" className="cursor-pointer" onClick={() => { setShowGridGuide(!showGridGuide) }}>
                     <Grid2x2 />
                 </Button>
             </div>
             <div ref={refContainer}></div>
+            <div className="absolute bottom-0 flex flex-row gap-14 text-gray-400">
+                <span>Left click: rotate</span>
+                <span>Mouse wheel: zoom</span>
+                <span>Ctrl & Left click: move</span>
+            </div>
         </div>
     );
 }

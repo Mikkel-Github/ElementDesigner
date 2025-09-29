@@ -44,16 +44,17 @@ def get_all_colors():
     return colors_dataset
 
 
-@app.get("/color/rgb")
+@app.get("/color/similar")
 def related_colors(
     hex: Optional[str] = None,
-    r: Optional[int] = Query(int, ge=0, le=255),
+    r: Optional[int] = Query(None, ge=0, le=255),
     g: Optional[int] = Query(None, ge=0, le=255),
     b: Optional[int] = Query(None, ge=0, le=255),
     h: Optional[float] = Query(None, ge=0.0, le=360.0),
     s: Optional[float] = Query(None, ge=0.0, le=100.0),
-    l: Optional[float] = Query(None, ge=0.0, le=100.0),
-    count: int = Query(5, ge=1, le=50),
+    v: Optional[float] = Query(None, ge=0.0, le=100.0),
+    threshold: Optional[float] = Query(0.4, ge=0.1, le=10.0),
+    min_results: Optional[int] = Query(5, ge=1, le=50),
 ):
     try:
         target_color = None
@@ -62,14 +63,16 @@ def related_colors(
             target_color = create_color_object(hex_color=hex)
         elif r is not None and g is not None and b is not None:
             target_color = create_color_object(rgb_color=(r, g, b))
-        elif h is not None and s is not None and l is not None:
-            target_color = create_color_object(hsl_color=(h, s, l))
+        elif h is not None and s is not None and v is not None:
+            target_color = create_color_object(hsv_color=(h, s, v))
         else:
             raise ValueError(
-                "You must provide either hex, rgb (r, g, b), or hsl (h, s, l)"
+                "You must provide either hex, rgb (r, g, b), or hsv (h, s, v)"
             )
 
-        related = get_related_colors(target_color, colors_dataset, num_related=count)
+        related = get_related_colors(
+            target_color, colors_dataset, threshold, min_results
+        )
         return [c.to_dict() for c in related]
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

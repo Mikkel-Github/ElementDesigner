@@ -82,17 +82,17 @@ function MaterialTool({
     }
 
     return (
-        <div className='flex flex-col w-full overflow-hidden max-w-80'>
+        <div className='flex flex-col w-full min-h-fit overflow-hidden max-w-80'>
             <h4 className='w-full text-center'>Material</h4>
             <hr />
-            <div className='flex flex-wrap gap-1 h-fit mt-4 p-1 pl-3 pr-3 overflow-x-hidden overflow-y-scroll'>
-                <Popover open={open} onOpenChange={setOpen}>
+            <div className='flex flex-wrap gap-1 h-fit mt-4 p-1 pl-3 pr-3 overflow-x-hidden overflow-y-scroll justify-center'>
+                <Popover open={open} onOpenChange={setOpen} >
                     <PopoverTrigger asChild>
                         <Button
                             variant="outline"
                             role="combobox"
                             aria-expanded={open}
-                            className="w-[200px] justify-between"
+                            className="w-[200px] justify-between cursor-pointer"
                         >
                             {value
                                 ? materials.find((materials) => materials.value === value)?.label
@@ -114,6 +114,7 @@ function MaterialTool({
                                                 setMaterial(currentValue);
                                                 setOpen(false)
                                             }}
+                                            className="cursor-pointer"
                                         >
                                             {materials.label}
                                             <Check

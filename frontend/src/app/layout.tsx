@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { PrimeReactProvider } from 'primereact/api';
 import "./globals.css";
 
 import { Open_Sans } from 'next/font/google';
@@ -36,7 +37,9 @@ export default function RootLayout({
             <body
                 className={`${openSans.variable} antialiased`}
             >
-                {children}
+                <PrimeReactProvider>
+                    {children}
+                </PrimeReactProvider>
             </body>
         </html>
     );

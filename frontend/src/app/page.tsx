@@ -11,9 +11,11 @@ import { Copyright } from "lucide-react";
 import MaterialTool from "@/components/material-tool";
 import ImageRenderTool from "@/components/image-render";
 import ModelDownloadTool from "@/components/model-downloader";
+import BGColorTool from "@/components/bg-color-tool";
 
 export default function Home() {
     const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+    const [bgColor, setBgColor] = useState<Color | null>(null);
     const rendererRef = useRef<WebGLRenderer>(undefined);
     const modelRef = useRef<Object3D>(undefined);
 
@@ -27,19 +29,24 @@ export default function Home() {
                 <div className="flex flex-row gap-4 max-h-full overflow-hidden">
                     <Viewport
                         selectedColor={selectedColor}
+                        bgColor={bgColor}
                         rendererRef={rendererRef}
                         modelRef={modelRef} />
                     <ColorTool selectedColor={selectedColor} onColorSelect={setSelectedColor} />
-                    <div className="flex flex-col gap-8 max-h-full overflow-y-scroll">
+                    <div className="flex flex-col gap-8 max-h-full overflow-hidden">
                         <MaterialTool
                             selectedColor={selectedColor}
                             onColorSelect={setSelectedColor} />
-                        <div className="flex flex-col gap-2 max-h-full overflow-y-scroll">
+                        <BGColorTool
+                            onBgColorSelect={setBgColor} />
+                        <div className="flex flex-col gap-2 max-h-full">
                             <h4 className='w-full text-center'>Actions</h4>
                             <hr />
 
-                            <ImageRenderTool rendererRef={rendererRef} />
-                            <ModelDownloadTool element={modelRef} />
+                            <div className="flex flex-col gap-2 max-h-full overflow-y-scroll pl-10 pr-10">
+                                <ImageRenderTool rendererRef={rendererRef} />
+                                <ModelDownloadTool element={modelRef} />
+                            </div>
                         </div>
                     </div>
                 </div>

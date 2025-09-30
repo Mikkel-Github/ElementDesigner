@@ -10,7 +10,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Color } from "@/lib/color";
 import { Button } from "@/components/ui/button"
 
-function Viewport({ selectedColor, rendererRef, modelRef }: { selectedColor: Color | null; rendererRef: RefObject<THREE.WebGLRenderer | undefined>; modelRef: RefObject<THREE.Object3D | undefined>; }) {
+function Viewport({ selectedColor, bgColor, rendererRef, modelRef }: { selectedColor: Color | null; bgColor: Color | null; rendererRef: RefObject<THREE.WebGLRenderer | undefined>; modelRef: RefObject<THREE.Object3D | undefined>; }) {
     const refContainer = useRef(null);
     const [scene, setScene] = useState<THREE.Scene | null>();
     const [element, setElement] = useState<THREE.Object3D>();
@@ -100,6 +100,15 @@ function Viewport({ selectedColor, rendererRef, modelRef }: { selectedColor: Col
         ToggleGrid(showGridGuide);
 
     }, [showAxisGuide, showGridGuide]);
+
+    useEffect(() => {
+        const renderer = rendererRef.current;
+        if (!renderer || !bgColor) return;
+
+        const bg_color = new THREE.Color(`rgb(${bgColor.codes.rgb.r}, ${bgColor.codes.rgb.g}, ${bgColor.codes.rgb.b})`);
+        renderer.setClearColor(bg_color);
+
+    }, [bgColor, rendererRef]);
 
     useEffect(() => {
         // Scene

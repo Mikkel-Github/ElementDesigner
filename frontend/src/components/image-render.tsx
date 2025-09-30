@@ -29,7 +29,7 @@ function ImageRenderTool({ rendererRef }: { rendererRef: React.MutableRefObject<
     }
 
     return (
-        <div className='flex flex-col w-full overflow-hidden max-w-80'>
+        <div className='flex flex-col w-full min-h-fit overflow-hidden max-w-80'>
             <Button variant='default' disabled={!rendererRef} className="cursor-pointer" onClick={renderImage}>Render Image</Button>
         </div>
     )

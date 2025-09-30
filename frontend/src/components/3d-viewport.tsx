@@ -10,7 +10,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Color } from "@/lib/color";
 import { Button } from "@/components/ui/button"
 
-function Viewport({ selectedColor, rendererRef }: { selectedColor: Color | null; rendererRef: RefObject<THREE.WebGLRenderer | undefined>; }) {
+function Viewport({ selectedColor, rendererRef, modelRef }: { selectedColor: Color | null; rendererRef: RefObject<THREE.WebGLRenderer | undefined>; modelRef: RefObject<THREE.Object3D | undefined>; }) {
     const refContainer = useRef(null);
     const [scene, setScene] = useState<THREE.Scene | null>();
     const [element, setElement] = useState<THREE.Object3D>();
@@ -185,6 +185,7 @@ function Viewport({ selectedColor, rendererRef }: { selectedColor: Color | null;
             const model = gltf.scene;
             model.castShadow = true;
             model.receiveShadow = true;
+            modelRef.current = model;
             setElement(model);
             scene.add(model);
         }, undefined, function(error) {

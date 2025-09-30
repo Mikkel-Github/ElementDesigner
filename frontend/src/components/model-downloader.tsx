@@ -39,7 +39,7 @@ function ModelDownloadTool({ element }: { element: React.MutableRefObject<Object
     }
 
     return (
-        <div className='flex flex-col w-full overflow-hidden max-w-80'>
+        <div className='flex flex-col w-full min-h-fit overflow-hidden max-w-80'>
             <Button variant='default' disabled={!element} className="cursor-pointer" onClick={exportModel}>Download Model</Button>
         </div>
     )

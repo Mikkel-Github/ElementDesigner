@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 import { Grid2x2, Move3D } from "lucide-react"
 
@@ -10,7 +10,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Color } from "@/lib/color";
 import { Button } from "@/components/ui/button"
 
-function Viewport({ selectedColor }: { selectedColor: Color | null }) {
+function Viewport({ selectedColor, rendererRef }: { selectedColor: Color | null; rendererRef: RefObject<THREE.WebGLRenderer | undefined>; }) {
     const refContainer = useRef(null);
     const [scene, setScene] = useState<THREE.Scene | null>();
     const [element, setElement] = useState<THREE.Object3D>();
@@ -114,14 +114,18 @@ function Viewport({ selectedColor }: { selectedColor: Color | null }) {
 
         // Renderer
         // antialias looks blurry
-        const renderer = new THREE.WebGLRenderer({ antialias: false });
+        const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, });
         renderer.setSize(width, height);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
         // document.body.appendChild( renderer.domElement );
         // use ref as a mount point of the Three.js scene instead of the document.body
-        refContainer.current && refContainer.current.appendChild(renderer.domElement);
+        if (refContainer.current) {
+            refContainer.current.appendChild(renderer.domElement);
+        }
+
+        rendererRef.current = renderer;
 
         // Camera controls
         const controls = new OrbitControls(camera, renderer.domElement);

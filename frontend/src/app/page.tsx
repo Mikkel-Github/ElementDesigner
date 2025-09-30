@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { WebGLRenderer } from "three";
+import { Object3D, WebGLRenderer } from "three";
 import Viewport from "@/components/3d-viewport";
 import ColorTool from "@/components/color-tool";
 import { Toaster } from "@/components/ui/sonner"
@@ -10,10 +10,12 @@ import { Color } from "@/lib/color";
 import { Copyright } from "lucide-react";
 import MaterialTool from "@/components/material-tool";
 import ImageRenderTool from "@/components/image-render";
+import ModelDownloadTool from "@/components/model-downloader";
 
 export default function Home() {
     const [selectedColor, setSelectedColor] = useState<Color | null>(null);
     const rendererRef = useRef<WebGLRenderer>(undefined);
+    const modelRef = useRef<Object3D>(undefined);
 
     return (
         <div className="max-h-dvh overflow-hidden font-sans grid grid-rows-[80px_1fr_20px] items-center justify-items-center min-h-screen pb-10 gap-16 sm:gap-2">
@@ -23,12 +25,22 @@ export default function Home() {
             <main className="flex flex-col max-h-full row-start-2 items-center sm:items-start overflow-hidden p-10">
                 <Toaster />
                 <div className="flex flex-row gap-4 max-h-full overflow-hidden">
-                    <Viewport selectedColor={selectedColor}
-                        rendererRef={rendererRef} />
+                    <Viewport
+                        selectedColor={selectedColor}
+                        rendererRef={rendererRef}
+                        modelRef={modelRef} />
                     <ColorTool selectedColor={selectedColor} onColorSelect={setSelectedColor} />
                     <div className="flex flex-col gap-8 max-h-full overflow-y-scroll">
-                        <MaterialTool selectedColor={selectedColor} onColorSelect={setSelectedColor} />
-                        <ImageRenderTool rendererRef={rendererRef} />
+                        <MaterialTool
+                            selectedColor={selectedColor}
+                            onColorSelect={setSelectedColor} />
+                        <div className="flex flex-col gap-2 max-h-full overflow-y-scroll">
+                            <h4 className='w-full text-center'>Actions</h4>
+                            <hr />
+
+                            <ImageRenderTool rendererRef={rendererRef} />
+                            <ModelDownloadTool element={modelRef} />
+                        </div>
                     </div>
                 </div>
             </main>
